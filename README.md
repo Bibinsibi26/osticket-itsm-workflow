@@ -203,23 +203,23 @@ Register-ScheduledTask -TaskName "osTicket Daily Database Backup" -Action $actio
 <div align="center">
 
   <h3>🎟️ Open Ticket Queue & Management</h3>
-  <p><img src="docs/screenshots/open-tickets.png" alt="Open Ticket Queue" width="90%"></p>
+  <p><img src="asset/open-tickets.png" alt="Open Ticket Queue" width="90%"></p>
   <br>
 
   <h3>👔 Staff & Agent Directory (RBAC)</h3>
-  <p><img src="docs/screenshots/agent-directory.png" alt="Staff Directory" width="90%"></p>
+  <p><img src="asset/agent-directory.png" alt="Staff Directory" width="90%"></p>
   <br>
 
   <h3>🏢 Department Configuration</h3>
-  <p><img src="docs/screenshots/departments.png" alt="Department Configuration" width="90%"></p>
+  <p><img src="asset/departments.png" alt="Department Configuration" width="90%"></p>
   <br>
 
   <h3>🏷️ Help Topics & Automated Ticket Categorization</h3>
-  <p><img src="docs/screenshots/help-topics.png" alt="Help Topics" width="90%"></p>
+  <p><img src="asset/help-topics.png" alt="Help Topics" width="90%"></p>
   <br>
 
   <h3>⏱️ Service Level Agreement (SLA) Matrix</h3>
-  <p><img src="docs/screenshots/sla-plans.png" alt="SLA Matrix" width="90%"></p>
+  <p><img src="asset/sla-plans.png" alt="SLA Matrix" width="90%"></p>
 
 </div>
 
