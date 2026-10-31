@@ -1,13 +1,13 @@
 <div align="center">
 
-  <h1>🎫 Enterprise Dockerized IT Help Desk Platform</h1>
-  <p><strong>A fully containerized, production-grade IT Service Management (ITSM) solution powered by osTicket, MariaDB, and Docker Compose.</strong></p>
+  <h1>🎫 Dockerized IT Help Desk & ITSM Workflow</h1>
+  <p><strong>A containerized IT Service Management platform built with osTicket, MariaDB, Docker Compose, PowerShell automation, and scheduled database backups.</strong></p>
 
   <p>
-    <a href="#-project-overview"><img src="https://img.shields.io/badge/Status-Production--Ready-brightgreen?style=for-the-badge&logo=github" alt="Status"></a>
-    <a href="#-tech-stack--requirements"><img src="https://img.shields.io/badge/Docker-29.0+-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"></a>
+    <a href="#-project-overview"><img src="https://img.shields.io/badge/Status-Portfolio%20%2F%20Lab%20Ready-brightgreen?style=for-the-badge&logo=github" alt="Status"></a>
+    <a href="#-tech-stack--requirements"><img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"></a>
     <a href="#-tech-stack--requirements"><img src="https://img.shields.io/badge/MariaDB-10.x-003545?style=for-the-badge&logo=mariadb&logoColor=white" alt="MariaDB"></a>
-    <a href="#-tech-stack--requirements"><img src="https://img.shields.io/badge/PowerShell-7.0+-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell"></a>
+    <a href="#-tech-stack--requirements"><img src="https://img.shields.io/badge/PowerShell-Automation-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell"></a>
   </p>
 
   <hr>
@@ -15,7 +15,9 @@
 
 ## 📌 Project Overview
 
-This repository contains a fully containerized IT Help Desk platform built on **osTicket** and **MariaDB** using **Docker Compose**. Designed to simulate enterprise Tier 1/2 IT support operations, the deployment includes department-based ticket routing, SLA performance tracking, role-based access control (RBAC), environment-based secrets isolation, and automated daily database backup scripts with dynamic retention rules.
+This project deploys a containerized IT Help Desk platform using **osTicket**, **MariaDB**, and **Docker Compose**. It simulates a practical Tier 1/Tier 2 IT support environment with department-based ticket routing, SLA policies, role-based access, environment-based secrets, and automated database backups.
+
+The project demonstrates end-to-end IT operations skills: service deployment, secure configuration, help-desk workflow design, troubleshooting, backup automation, and disaster-recovery planning.
 
 ---
 
@@ -24,32 +26,32 @@ This repository contains a fully containerized IT Help Desk platform built on **
 <table>
   <tr>
     <td width="50%">
-      <h3>🐳 Containerized Orchestration</h3>
-      <p>Isolated service layers separating application code (osTicket/PHP-FPM/Nginx) and database storage (MariaDB 10.x) across a dedicated Docker bridge network.</p>
+      <h3>🐳 Containerized Deployment</h3>
+      <p>osTicket and MariaDB run as isolated Docker Compose services on a dedicated bridge network, with persistent database storage.</p>
     </td>
     <td width="50%">
-      <h3>🔒 Hardened Security</h3>
-      <p>Externalized secrets using Git-ignored <code>.env</code> files, non-root application execution, protected databases, and restricted administrative network access.</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%">
-      <h3>🏷️ Intelligent Ticket Routing</h3>
-      <p>Automated request classification mapped across Help Topics, functional departments, and dynamic priority assignment.</p>
-    </td>
-    <td width="50%">
-      <h3>⏱️ SLA & Escalation Policies</h3>
-      <p>Configurable Service Level Agreements (1h Critical, 4h High, 24h Normal, 72h Low) to enforce strict response and resolution targets.</p>
+      <h3>🔒 Secure Configuration</h3>
+      <p>Database and administrator credentials are externalized through a Git-ignored <code>.env</code> file instead of being hardcoded in Compose configuration.</p>
     </td>
   </tr>
   <tr>
     <td width="50%">
-      <h3>💾 Automated Backup & Retention</h3>
-      <p>Daily automated PowerShell backup routine utilizing <code>mariadb-dump</code> with dynamic 14-day rotation and health checks.</p>
+      <h3>🏷️ Ticket Routing</h3>
+      <p>Help Topics classify incoming requests and route them to the appropriate IT department and priority level.</p>
     </td>
     <td width="50%">
-      <h3>👥 Role-Based Access Control</h3>
-      <p>Tiered administrative and support staff permissions with department-level visibility boundaries.</p>
+      <h3>⏱️ SLA Policies</h3>
+      <p>Configurable SLA plans define response and resolution targets for critical, high, normal, and low-priority requests.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <h3>🤖 Backup Automation</h3>
+      <p>A PowerShell script and Windows Task Scheduler job create daily timestamped MariaDB backups with automatic 14-backup retention.</p>
+    </td>
+    <td width="50%">
+      <h3>👥 Role-Based Access</h3>
+      <p>Administrators and support agents receive department-scoped permissions, separating administrative control from frontline support work.</p>
     </td>
   </tr>
 </table>
@@ -61,140 +63,238 @@ This repository contains a fully containerized IT Help Desk platform built on **
 ```text
                        +-----------------------------------+
                        |           Client Browser          |
-                       |   http://127.0.0.1:8080 (Client)   |
-                       |   http://127.0.0.1:8080/scp (Staff)  |
+                       |   http://127.0.0.1:8080           |
+                       |   http://127.0.0.1:8080/scp       |
                        +-----------------+-----------------+
                                          |
-                                         | HTTP (Port 8080 -> 80)
+                                         | HTTP: 8080 -> 80
                                          v
-+-----------------------------------------------------------------------------------+
-| Docker Engine (WSL 2 Backend)                                                     |
-|                                                                                   |
-|  +-------------------------------------+     +---------------------------------+  |
-|  |  osTicket Container                 |     |  MariaDB Container              |  |
-|  |  (Nginx + PHP-FPM + Cron)           |     |  (Persistent Volume)            |  |
-|  |                                     |     |                                 |  |
-|  |  Service Name: osticket             |     |  Service Name: mariadb          |  |
-|  |                                     | TCP |                                 |  |
-|  |  [Internal Application Logic] =====>|====>|  [Database: osticket]           |  |
-|  |                                     | 3306|  Port 3306 (Internal Only)     |  |
-|  +-------------------------------------+     +---------------------------------+  |
-|                                                                                   |
-|  Bridge Network: osticket-net                                                     |
-+-----------------------------------------------------------------------------------+
++---------------------------------------------------------------------------+
+| Docker Engine                                                             |
+|                                                                           |
+|  +--------------------------------+     +------------------------------+  |
+|  | osTicket Container             |     | MariaDB Container            |  |
+|  | Nginx + PHP-FPM + Cron         |     | Persistent database volume   |  |
+|  |                                |     |                              |  |
+|  | Service: osticket              |====>| Service: mariadb             |  |
+|  |                                | TCP | Database: osticket           |  |
+|  +--------------------------------+ 3306+------------------------------+  |
+|                                                                           |
+|  Docker Bridge Network: osticket-net                                      |
++---------------------------------------------------------------------------+
                                          |
-                                         | Automated Daily Execution
+                                         | Daily scheduled execution
                                          v
                        +-----------------------------------+
-                       |     Windows Task Scheduler        |
-                       |    backup-osticket.ps1 Script     |
-                       |   Target: C:\osticket-backups\    |
+                       |      Windows Task Scheduler       |
+                       |      backup-osticket.ps1          |
+                       |      C:\osticket-backups\         |
                        +-----------------------------------+
 ```
 
 ---
 
-## 🛠️ Tech Stack & Requirements
+## 🛠️ Tech Stack
 
-| Layer | Component / Tool | Version / Spec |
+| Layer | Tool / Component | Purpose |
 | :--- | :--- | :--- |
-| **Operating System** | Windows 10/11 (WSL 2) / Linux / macOS | x86_64 Architecture |
-| **Containerization** | Docker Desktop & Docker Compose | Engine v29+ / Compose v2.x+ |
-| **Database** | MariaDB Container | 10.x (Persistent Volume) |
-| **Application Server** | Nginx & PHP-FPM | Integrated osTicket Image |
-| **Automation** | PowerShell / Windows Task Scheduler | Scripting & Daily Cron Task |
+| Help Desk | osTicket | Ticketing, departments, SLAs, agents, support workflow |
+| Database | MariaDB | Persistent storage for tickets and configuration |
+| Containers | Docker Compose | Service orchestration and networking |
+| Web Server | Nginx + PHP-FPM | osTicket application runtime |
+| Automation | PowerShell | Database backup scripting |
+| Scheduler | Windows Task Scheduler | Daily backup execution |
+| Security | `.env` + `.gitignore` | Secrets isolation and repository protection |
 
 ---
 
 ## 🚀 Getting Started
 
-### 1️⃣ Clone Repository & Prepare Environment
+### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/dockerized-osticket-helpdesk.git
-cd dockerized-osticket-helpdesk
+git clone [https://github.com/Bibinsibi26/osticket-itsm-workflow.git](https://github.com/Bibinsibi26/osticket-itsm-workflow.git)
+cd osticket-itsm-workflow
 ```
 
-### 2️⃣ Configure Environment Variables (`.env`)
+### 2️⃣ Create the Environment File
 
-Create a `.env` file in the project root to store credentials safely:
+Create a `.env` file in the project root:
 
 ```env
-MARIADB_ROOT_PASSWORD=YourUniqueSuperStrongRootPassword123!
-MARIADB_PASSWORD=YourUniqueAppPassword456!
+MARIADB_ROOT_PASSWORD=YourUniqueStrongRootPassword
+MARIADB_PASSWORD=YourUniqueStrongDatabasePassword
 ADMIN_USERNAME=helpdeskadmin
-ADMIN_PASSWORD=YourUniqueAdminPassword789!
+ADMIN_PASSWORD=YourUniqueStrongAdminPassword
 ```
 
 > [!IMPORTANT]
-> Verify that `.gitignore` contains the following safeguards to protect secrets:
+> Never commit the `.env` file, database files, or SQL backups to GitHub.
+>
+> Ensure `.gitignore` includes:
+>
 > ```text
 > .env
 > mariadb-data/
 > *.sql
 > ```
 
-### 3️⃣ Launch Stack with Docker Compose
+### 3️⃣ Start the Stack
 
 ```bash
 docker compose up -d
 ```
 
-Verify service status and initialization logs:
+Check the deployment status:
+
 ```bash
 docker compose ps
 docker compose logs -f osticket
 ```
 
-### 4️⃣ Access the Endpoints
+Wait until the logs show that the database installation is complete and Nginx/PHP-FPM are running.
 
-<ul>
-  <li><strong>Public Support Portal:</strong> <a href="http://127.0.0.1:8080" target="_blank">http://127.0.0.1:8080</a></li>
-  <li><strong>Staff / Admin Control Panel:</strong> <a href="http://127.0.0.1:8080/scp" target="_blank">http://127.0.0.1:8080/scp</a></li>
-</ul>
+### 4️⃣ Access osTicket
+
+| Interface | URL |
+| :--- | :--- |
+| Support Center | http://127.0.0.1:8080 |
+| Submit a Ticket | http://127.0.0.1:8080/open.php |
+| Staff / Admin Panel | http://127.0.0.1:8080/scp |
 
 ---
 
-## ⚙️ Configuration & Operational Workflows
+## ⚙️ ITSM Workflow
 
-### ⏱️ Service Level Agreements (SLAs)
+### Departments
 
-| SLA Plan Name | Grace Period | Target Operational Scope |
+| Department | Use Case |
+| :--- | :--- |
+| IT Support | General Tier 1 technical assistance |
+| Hardware | Laptops, desktops, printers, peripherals |
+| Network | Wi-Fi, VPN, internet, connectivity issues |
+| Software & Applications | Application errors, installations, updates |
+| Access Requests | Account creation, permissions, password resets |
+| Security | Phishing, malware, suspicious activity |
+
+### SLA Plans
+
+| SLA | Grace Period | Example Use |
 | :--- | :---: | :--- |
-| <b style="color: #d9534f;">Critical – 1 Hour</b> | **1 Hour** | System outages, security incidents, network failure |
-| <b style="color: #f0ad4e;">High – 4 Hours</b> | **4 Hours** | Workstation hardware failures, blocked user access |
-| <b style="color: #0275d8;">Normal – 1 Business Day</b> | **24 Hours** | Software installations, general system requests |
-| <b style="color: #5cb85c;">Low – 3 Business Days</b> | **72 Hours** | General inquiries, non-urgent documentation updates |
+| Critical | 1 hour | Security incidents, major outages |
+| High | 4 hours | Work-blocking hardware or network issues |
+| Normal | 24 hours | Software requests and standard support |
+| Low | 72 hours | General inquiries and non-urgent requests |
 
-### 🏢 Department Categorization
+### Ticket Flow
 
-- 🔑 **Access Requests:** User onboarding, account provisioning, password resets.
-- 💻 **Hardware:** Workstations, laptops, monitors, peripherals, printers.
-- 🌐 **Network:** Wi-Fi issues, corporate VPN access, internet connectivity.
-- 🛡️ **Security:** Suspicious emails, phishing alerts, malware isolation.
-- 📦 **Software & Applications:** Application errors, updates, license allocation.
-- 🛠️ **IT Support:** General Tier 1 triage and assistance.
+```text
+User submits ticket
+        |
+        v
+Help Topic classification
+        |
+        v
+Department routing
+        |
+        v
+SLA deadline applied
+        |
+        v
+Agent works and resolves ticket
+        |
+        v
+Ticket closed and stored in MariaDB
+```
+
+---
+
+## 🤖 Automation
+
+This project includes automation for database protection, backup retention, and disaster recovery.
+
+### Daily Database Backups
+
+The `backup-osticket.ps1` script:
+
+- Creates a timestamped SQL dump of the osTicket MariaDB database.
+- Runs daily through Windows Task Scheduler.
+- Stores backups in `C:\osticket-backups`.
+- Uses filenames such as `osticket_2026-10-30_12-27-29.sql`.
+- Retains only the latest 14 backups.
+- Automatically deletes older backup files.
+- Validates that the generated backup is larger than 1 KB.
+
+### Secure Credential Handling
+
+The backup script does not store the MariaDB password in plaintext. It reads the password from the MariaDB container environment:
+
+```powershell
+docker exec osticket-db sh -c 'mariadb-dump -h 127.0.0.1 -u osticket -p"$MARIADB_PASSWORD" osticket'
+```
+
+This prevents database credentials from being exposed in the PowerShell script or uploaded to GitHub.
+
+### Backup Policy
+
+| Setting | Value |
+| :--- | :--- |
+| Backup frequency | Daily |
+| Backup format | SQL dump |
+| Backup location | `C:\osticket-backups` |
+| Retention | Latest 14 backups |
+| Automatic cleanup | Enabled |
+| Credential source | MariaDB container environment |
+| Scheduler | Windows Task Scheduler |
+
+### Manual Backup
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\backup-osticket.ps1
+```
+
+### Register the Daily Backup Task
+
+Run in an elevated PowerShell window:
+
+```powershell
+$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument '-ExecutionPolicy Bypass -File "C:\osticket-docker\backup-osticket.ps1"'
+
+$trigger = New-ScheduledTaskTrigger -Daily -At 9PM
+
+$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable
+
+Register-ScheduledTask -TaskName "osTicket Daily Database Backup" `
+  -Action $action `
+  -Trigger $trigger `
+  -Settings $settings `
+  -Description "Daily backup of the osTicket MariaDB database"
+```
+
+### Disaster Recovery
+
+To restore a backup:
+
+```powershell
+docker exec -i osticket-db mariadb -h 127.0.0.1 -u osticket -p"$MARIADB_PASSWORD" osticket < "C:\osticket-backups\BACKUP_FILE.sql"
+```
+
+This can recover:
+
+- Tickets and ticket threads
+- Departments
+- Help Topics
+- SLA plans
+- Agent accounts
+- osTicket configuration
 
 ---
 
 ## 💾 Backup & Disaster Recovery
 
-An automated disaster recovery process is integrated via `backup-osticket.ps1`. The script executes `mariadb-dump` from inside the MariaDB container without hardcoding credentials or exposing passwords in plaintext.
+The backup process protects the osTicket database against accidental deletion, container recreation, or local system failure. Backups are stored outside the Docker project folder and are automatically rotated to prevent uncontrolled disk usage.
 
-### 📜 Manual Execution
-```powershell
-powershell -ExecutionPolicy Bypass -File .\backup-osticket.ps1
-```
-
-### ⏰ Automated Daily Task Registration
-Execute in Administrator PowerShell to register a daily Task Scheduler job at 9:00 PM with an automated 14-day rotation:
-
-```powershell
-$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument '-ExecutionPolicy Bypass -File "C:\osticket-docker\backup-osticket.ps1"'
-$trigger = New-ScheduledTaskTrigger -Daily -At 9PM
-$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable
-Register-ScheduledTask -TaskName "osTicket Daily Database Backup" -Action $action -Trigger $trigger -Settings $settings -Description "Daily backup of the osTicket MariaDB database"
-```
+A successful backup produces a dated `.sql` file containing the complete osTicket database structure and data.
 
 ---
 
@@ -202,60 +302,78 @@ Register-ScheduledTask -TaskName "osTicket Daily Database Backup" -Action $actio
 
 <div align="center">
 
-  <h3>🎟️ Open Ticket Queue & Management</h3>
+  <h3>🎟️ Open Ticket Queue</h3>
   <p><img src="asset/open-tickets.png" alt="Open Ticket Queue" width="90%"></p>
-  <br>
 
-  <h3>👔 Staff & Agent Directory (RBAC)</h3>
+  <h3>👔 Staff & Agent Directory</h3>
   <p><img src="asset/agent-directory.png" alt="Staff Directory" width="90%"></p>
-  <br>
 
   <h3>🏢 Department Configuration</h3>
   <p><img src="asset/departments.png" alt="Department Configuration" width="90%"></p>
-  <br>
 
-  <h3>🏷️ Help Topics & Automated Ticket Categorization</h3>
+  <h3>🏷️ Help Topics</h3>
   <p><img src="asset/help-topics.png" alt="Help Topics" width="90%"></p>
-  <br>
 
-  <h3>⏱️ Service Level Agreement (SLA) Matrix</h3>
-  <p><img src="asset/sla-plans.png" alt="SLA Matrix" width="90%"></p>
+  <h3>⏱️ SLA Plans</h3>
+  <p><img src="asset/sla-plans.png" alt="SLA Plans" width="90%"></p>
 
 </div>
 
 ---
 
-## 📄 Operational Runbook & Commands
+## 📄 Operational Commands
 
 <details>
-<summary><b>🔍 Click to view common CLI operational commands</b></summary>
+<summary><b>Click to view common Docker commands</b></summary>
 
 <br>
 
 ```bash
-# Stop stack preserving database state
+# Start the stack
+docker compose up -d
+
+# Stop the stack while preserving database data
 docker compose down
 
-# Restart application container
+# Restart osTicket
 docker compose restart osticket
 
-# View live container logs
+# View osTicket logs
 docker compose logs -f --tail=100 osticket
 
-# Manual database dump check
-docker exec osticket-db sh -c 'mariadb-dump -h 127.0.0.1 -u osticket -p"$MARIADB_PASSWORD" osticket' > manual-backup.sql
+# View MariaDB logs
+docker compose logs -f --tail=100 mariadb
+
+# Create a manual database backup
+powershell -ExecutionPolicy Bypass -File .\backup-osticket.ps1
 ```
 
 </details>
 
 ---
 
+## 📈 Future Improvements
+
+- SMTP email integration for ticket notifications
+- IMAP email-to-ticket conversion
+- Custom ticket fields for asset and location tracking
+- Automated ticket assignment rules
+- Dashboard reporting for ticket volume and SLA performance
+- Off-site or cloud backup storage
+- CI/CD-based configuration validation
+
+---
+
 ## 👤 Author
 
 <div align="center">
+
   <h3>Bibin</h3>
-  <p><strong>Technical Support & Infrastructure Specialist</strong></p>
+  <p><strong>Technical Support & Infrastructure Enthusiast</strong></p>
   <p>
-    <a href="https://github me" target="_blank"><img src="https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github" alt="GitHub Profile"></a>
+    <a href="https://github.com/Bibinsibi26" target="_blank">
+      <img src="https://img.shields.io/badge/GitHub-Bibinsibi26-181717?style=for-the-badge&logo=github" alt="GitHub Profile">
+    </a>
   </p>
+
 </div>
